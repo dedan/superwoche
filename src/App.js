@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import MyCalendar from './MyCalendar'
+import ExplanationDialog from './ExplanationDialog'
 import firebase from 'firebase'
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 var config = {
   apiKey: "AIzaSyDZLKYT7Jek7nZ35uO_II5dLCamtakxJPA",
@@ -22,7 +25,8 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoading: true
+      isExplanationDialogShown: false,
+      isLoading: true,
     }
     firebase.auth().onAuthStateChanged(user => {
       this.setState({isLoading: false, user})
@@ -38,14 +42,20 @@ class App extends Component {
   }
 
   render() {
-    const {isLoading, user} = this.state
+    const {isExplanationDialogShown, isLoading, user} = this.state
     if (isLoading) {
       return <div>loading...</div>
     }
     return (
       <div>
+        <ExplanationDialog
+            isOpen={isExplanationDialogShown}
+            onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
         {user ? <div>
           <button onClick={() => firebase.auth().signOut()}>logout</button>
+          <button onClick={() => this.setState({isExplanationDialogShown: true})}>
+            Explanation
+          </button>
           <MyCalendar />
         </div> : <button onClick={this.handleSignupLogin}>please log in</button>}
       </div>
