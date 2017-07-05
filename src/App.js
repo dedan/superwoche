@@ -1,41 +1,53 @@
 import React, { Component } from 'react';
-import BigCalendar from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css'
+import MyCalendar from './MyCalendar'
+import firebase from 'firebase'
 
-BigCalendar.setLocalizer(
-  BigCalendar.momentLocalizer(moment)
-);
+
+var config = {
+  apiKey: "AIzaSyDZLKYT7Jek7nZ35uO_II5dLCamtakxJPA",
+  authDomain: "friends-cal.firebaseapp.com",
+  databaseURL: "https://friends-cal.firebaseio.com",
+  projectId: "friends-cal",
+  storageBucket: "friends-cal.appspot.com",
+  messagingSenderId: "487333229953"
+};
+firebase.initializeApp(config);
+
+var provider = new firebase.auth.FacebookAuthProvider();
+provider.addScope('public_profile');
+
 
 class App extends Component {
 
-  state = {
-    events: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoading: true
+    }
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({isLoading: false, user})
+    });
   }
 
-  handleSelectSlot = slotInfo => {
-    this.setState({
-      events: [...this.state.events, {
-        start: slotInfo.start,
-        end: slotInfo.end
-      }]
-    })
+  handleSignupLogin = () => {
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      console.log('>>', 'logged in', result)
+    }).catch(function(error) {
+      console.log('>>', 'error', error)
+    });
   }
 
   render() {
-    const {events} = this.state
+    const {isLoading, user} = this.state
+    if (isLoading) {
+      return <div>loading...</div>
+    }
     return (
       <div>
-        <BigCalendar
-          selectable
-          toolbar={false}
-          events={events}
-          defaultView='week'
-          scrollToTime={new Date(1970, 1, 1, 6)}
-          defaultDate={new Date(2015, 3, 12)}
-          onSelectEvent={event => alert(event.title)}
-          onSelectSlot={this.handleSelectSlot}
-        />
+        {user ? <div>
+          <button onClick={() => firebase.auth().signOut()}>logout</button>
+          <MyCalendar />
+        </div> : <button onClick={this.handleSignupLogin}>please log in</button>}
       </div>
     );
   }
