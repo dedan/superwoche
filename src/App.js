@@ -53,16 +53,18 @@ class App extends Component {
   }
 
   handleSelectSlot = slot => {
+    const newEventId = db.ref('/events').push().key
     const newEvent = {
+      id: newEventId,
       start: slot.start.valueOf(),
       end: slot.end.valueOf(),
     }
-    const newEventKey = db.ref('/events').push().key
-    db.ref(`/events/${newEventKey}`).update(newEvent)
+    db.ref(`/events/${newEventId}`).update(newEvent)
+    this.handleSelectEvent(newEventId)
   }
 
   render() {
-    const {events, isExplanationDialogShown, isLoading, user, selectedEvent} = this.state
+    const {events, isExplanationDialogShown, isLoading, user, selectedEventId} = this.state
     if (isLoading) {
       return <div>loading...</div>
     }
@@ -71,6 +73,11 @@ class App extends Component {
         <ExplanationDialog
             isOpen={isExplanationDialogShown}
             onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
+        <EventDialog
+            isOpen={!!selectedEventId}
+            events={events}
+            selectedEventId={selectedEventId}
+            onCloseClick={() => this.setState({selectedEventId: null})} />
         {user ? <div>
           <button onClick={() => firebase.auth().signOut()}>logout</button>
           <button onClick={() => this.setState({isExplanationDialogShown: true})}>
