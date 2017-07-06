@@ -9,30 +9,20 @@ BigCalendar.setLocalizer(
 
 
 export default class MyCalendar extends Component {
-  state = {
-    events: []
-  }
-
-  handleSelectSlot = slotInfo => {
-    this.setState({
-      events: [...this.state.events, {
-        start: slotInfo.start,
-        end: slotInfo.end
-      }]
-    })
-  }
 
   render() {
-    const {events} = this.state
+    const {events, onSelectEvent, onSelectSlot} = this.props
     return <BigCalendar
       selectable
       toolbar={false}
       events={events}
       defaultView='week'
+      startAccessor={event => new Date(event.start)}
+      endAccessor={event => new Date(event.end)}
       scrollToTime={new Date(1970, 1, 1, 6)}
       defaultDate={new Date(2015, 3, 12)}
-      onSelectEvent={event => alert(event.title)}
-      onSelectSlot={this.handleSelectSlot}
+      onSelectEvent={event => onSelectEvent(event.id)}
+      onSelectSlot={onSelectSlot}
     />
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MyCalendar from './MyCalendar'
 import ExplanationDialog from './ExplanationDialog'
+import EventDialog from './EventDialog'
 import firebase from 'firebase'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -15,6 +16,7 @@ var config = {
   messagingSenderId: "487333229953"
 };
 firebase.initializeApp(config);
+const db = firebase.database()
 
 var provider = new firebase.auth.FacebookAuthProvider();
 provider.addScope('public_profile');
@@ -22,15 +24,20 @@ provider.addScope('public_profile');
 
 class App extends Component {
 
+  state = {
+    events: {},
+    isExplanationDialogShown: false,
+    isLoading: true,
+  }
+
   constructor(props) {
     super(props)
-    this.state = {
-      isExplanationDialogShown: false,
-      isLoading: true,
-    }
     firebase.auth().onAuthStateChanged(user => {
       this.setState({isLoading: false, user})
     });
+    db.ref('/events').on('value', snapshot => {
+      this.setState({events: snapshot.val()  || {}})
+    })
   }
 
   handleSignupLogin = () => {
@@ -41,8 +48,21 @@ class App extends Component {
     });
   }
 
+  handleSelectEvent = eventId => {
+    this.setState({selectedEventId: eventId})
+  }
+
+  handleSelectSlot = slot => {
+    const newEvent = {
+      start: slot.start.valueOf(),
+      end: slot.end.valueOf(),
+    }
+    const newEventKey = db.ref('/events').push().key
+    db.ref(`/events/${newEventKey}`).update(newEvent)
+  }
+
   render() {
-    const {isExplanationDialogShown, isLoading, user} = this.state
+    const {events, isExplanationDialogShown, isLoading, user, selectedEvent} = this.state
     if (isLoading) {
       return <div>loading...</div>
     }
@@ -56,7 +76,10 @@ class App extends Component {
           <button onClick={() => this.setState({isExplanationDialogShown: true})}>
             Explanation
           </button>
-          <MyCalendar />
+          <MyCalendar
+              events={Object.values(events)}
+              onSelectEvent={this.handleSelectEvent}
+              onSelectSlot={this.handleSelectSlot} />
         </div> : <button onClick={this.handleSignupLogin}>please log in</button>}
       </div>
     );
