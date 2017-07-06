@@ -52,6 +52,11 @@ class App extends Component {
     this.setState({selectedEventId: eventId})
   }
 
+  handleDeleteEvent = eventId => {
+    db.ref(`/events/${eventId}`).remove()
+    this.setState({selectedEventId: null})
+  }
+
   handleSelectSlot = slot => {
     const newEventId = db.ref('/events').push().key
     const newEvent = {
@@ -77,6 +82,7 @@ class App extends Component {
             isOpen={!!selectedEventId}
             events={events}
             selectedEventId={selectedEventId}
+            onDeleteEventClick={this.handleDeleteEvent}
             onCloseClick={() => this.setState({selectedEventId: null})} />
         {user ? <div>
           <button onClick={() => firebase.auth().signOut()}>logout</button>

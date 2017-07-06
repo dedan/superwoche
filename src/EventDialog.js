@@ -15,7 +15,7 @@ export default class EventDialog extends Component {
   }
 
   render() {
-    const {isOpen, onCloseClick, onSaveClick} = this.props
+    const {isOpen, onCloseClick, onDeleteEventClick, onSaveClick, selectedEventId} = this.props
     const {localEvent} = this.state
     const actions = [
       <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />,
@@ -26,6 +26,9 @@ export default class EventDialog extends Component {
         {localEvent ? <div>
           <div>from: {localEvent.start}</div>
           <div>to: {localEvent.end}</div>
+          <FlatButton
+              label="Delete"
+              onTouchTap={() => onDeleteEventClick(selectedEventId)} />
         </div> : <div>empty</div>}
       </Dialog>
     );
