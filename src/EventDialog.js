@@ -13,7 +13,14 @@ export default class EventDialog extends Component {
 
   componentWillReceiveProps(nextProps, oldProps) {
     if (nextProps.selectedEventId && nextProps.selectedEventId !== oldProps.selectedEventId) {
-      this.setState({...nextProps.events[nextProps.selectedEventId]})
+      const localEvent = {
+        title: '',
+        start: null,
+        end: null,
+        desc: '',
+        ...nextProps.events[nextProps.selectedEventId],
+      }
+      this.setState(localEvent)
     }
   }
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import firebase from 'firebase'
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import MyCalendar from './MyCalendar'
 import ExplanationDialog from './ExplanationDialog'
 import EventDialog from './EventDialog'
-import firebase from 'firebase'
+import {validateEventChanges} from './validation'
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 var config = {
@@ -20,6 +22,12 @@ const db = firebase.database()
 
 var provider = new firebase.auth.FacebookAuthProvider();
 provider.addScope('public_profile');
+
+const appConfig = {
+  wakeQuotaMinutes: 7 * 14 * 60,
+  sleepQuotaMinutes: 7 * 8 * 60,
+  breakMinutes: 30,
+}
 
 
 class App extends Component {
@@ -63,14 +71,20 @@ class App extends Component {
   }
 
   handleSelectSlot = slot => {
+    const {events} = this.state
     const newEventId = db.ref('/events').push().key
     const newEvent = {
       id: newEventId,
       start: slot.start.valueOf(),
       end: slot.end.valueOf(),
     }
-    db.ref(`/events/${newEventId}`).update(newEvent)
-    this.handleSelectEvent(newEventId)
+    const errors = validateEventChanges(newEvent, events, appConfig)
+    if (errors.length) {
+      alert(errors.join('\n'))
+    } else {
+      db.ref(`/events/${newEventId}`).update(newEvent)
+      this.handleSelectEvent(newEventId)
+    }
   }
 
   render() {
