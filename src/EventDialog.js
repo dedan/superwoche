@@ -37,16 +37,25 @@ export default class EventDialog extends Component {
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
     const {title, start, end} = this.state
+    const style = {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }
     if (!(start && end)) {
       return <div></div>
     }
     const lengthInMinutes = (end - start) / (60 * 1000)
-    const actions = [
-      <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />,
-      <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />,
-    ];
+    const actions = <div style={{display: 'flex'}}>
+      <FlatButton
+          label="Delete"
+          onTouchTap={() => onDeleteEventClick(selectedEventId)} />
+      <div style={{flex: 1}} />
+      <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />
+      <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
+    </div>
     return (
-      <Dialog title="Edit event" actions={actions} modal={true} open={isOpen}>
+      <Dialog bodyStyle={style} title="Edit event" actions={actions} modal={true} open={isOpen}>
         <TextField
             floatingLabelText="Title"
             value={title}
@@ -66,9 +75,6 @@ export default class EventDialog extends Component {
           })}
         </SelectField>
         <br />
-        <FlatButton
-            label="Delete"
-            onTouchTap={() => onDeleteEventClick(selectedEventId)} />
       </Dialog>
     );
   }
