@@ -36,11 +36,11 @@ export default class EventDialog extends Component {
 
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
-    const {title, start, end} = this.state
+    const {desc, title, start, end} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
+      // alignItems: 'center',
     }
     if (!(start && end)) {
       return <div></div>
@@ -55,26 +55,41 @@ export default class EventDialog extends Component {
       <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
     </div>
     return (
-      <Dialog bodyStyle={style} title="Edit event" actions={actions} modal={true} open={isOpen}>
+      <Dialog
+          bodyStyle={style}
+          title="Edit event"
+          actions={actions}
+          modal={true}
+          open={isOpen}
+          autoScrollBodyContent={true}>
         <TextField
+            style={{width: '100%'}}
             floatingLabelText="Title"
             value={title}
             onChange={e => this.setState({title: e.target.value})} />
-        <br />
+        <div>
+          <TextField
+              style={{width: '45%'}}
+              floatingLabelText="Start"
+              disabled={true}
+              value={moment(start).format('dddd hh:mm a')} />
+          <SelectField
+              style={{width: '45%'}}
+              floatingLabelText="Duration"
+              value={lengthInMinutes}
+              onChange={this.handleLengthChange} >
+            {Array.from({length: 12}, (value, key) => (key + 1) * 30).map(duration => {
+              return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
+            })}
+          </SelectField>
+        </div>
         <TextField
-            floatingLabelText="Start"
-            disabled={true}
-            value={moment(start).format('dddd hh:mm a')} />
-        <br />
-        <SelectField
-          floatingLabelText="Duration"
-          value={lengthInMinutes}
-          onChange={this.handleLengthChange} >
-          {Array.from({length: 12}, (value, key) => (key + 1) * 30).map(duration => {
-            return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
-          })}
-        </SelectField>
-        <br />
+            hintText="Please add detailed information for this event"
+            floatingLabelText="Description"
+            multiLine={true}
+            rows={2}
+            value={desc}
+            onChange={e => this.setState({desc: e.target.value})} />
       </Dialog>
     );
   }
