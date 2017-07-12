@@ -62,7 +62,7 @@ export class Teaser extends Component {
             label="Login with Facebook"
             onTouchTap={onLoginClick} />
         <div style={{marginTop: 10, marginBottom: 30}}>... to let the magic happen</div>
-        <img src={require('./excited.gif')} />
+        <img alt="excited" src={require('./excited.gif')} />
       </div>
     )
   }

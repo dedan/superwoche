@@ -5,7 +5,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import moment from 'moment'
-window.moment = moment
+import Avatar from 'material-ui/Avatar';
 
 export default class EventDialog extends Component {
 
@@ -36,7 +36,7 @@ export default class EventDialog extends Component {
 
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
-    const {desc, title, start, end} = this.state
+    const {desc, title, start, end, user} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -54,10 +54,17 @@ export default class EventDialog extends Component {
       <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />
       <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
     </div>
+    const titleComp = <div style={{display: 'flex', alignItems: 'center'}}>
+      <Avatar src={user.photoURL} />&nbsp;
+      Event by&nbsp;<a href={`http://facebook.com/${user.uid}`} target="_blank">
+        {user.displayName}
+      </a>
+    </div>
+
     return (
       <Dialog
           bodyStyle={style}
-          title="Edit event"
+          title={titleComp}
           actions={actions}
           modal={true}
           open={isOpen}
@@ -89,7 +96,7 @@ export default class EventDialog extends Component {
             floatingLabelText="Description"
             multiLine={true}
             rows={2}
-            maxRows={4}
+            rowsMax={4}
             value={desc}
             underlineShow={false}
             onChange={e => this.setState({desc: e.target.value})} />

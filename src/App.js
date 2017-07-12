@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import FlatButton from 'material-ui/FlatButton'
 
+import './App.css'
 import MyCalendar from './MyCalendar'
 import EventDialog from './EventDialog'
 import {validateEventChanges} from './validation'
@@ -71,12 +71,13 @@ class App extends Component {
   }
 
   handleSelectSlot = slot => {
-    const {events} = this.state
+    const {events, user} = this.state
     const newEventId = db.ref('/events').push().key
     const newEvent = {
       id: newEventId,
       start: slot.start.valueOf(),
       end: slot.end.valueOf(),
+      user: user.providerData[0],
     }
     const errors = validateEventChanges(newEvent, events, appConfig)
     if (errors.length) {
