@@ -24,8 +24,14 @@ export default class EventDialog extends Component {
     this.setState({localEvent})
   }
 
+  handleSaveClick = () => {
+    const {onSaveClick, selectedEventId} = this.props
+    const {localEvent} = this.state
+    onSaveClick && onSaveClick(selectedEventId, localEvent)
+  }
+
   render() {
-    const {isOpen, onCloseClick, onDeleteEventClick, onSaveClick, selectedEventId} = this.props
+    const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
     const {localEvent} = this.state
     let lengthInMinutes
     if (localEvent) {
@@ -33,7 +39,7 @@ export default class EventDialog extends Component {
     }
     const actions = [
       <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />,
-      <FlatButton label="Save" primary={true} onTouchTap={() => onSaveClick} />,
+      <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />,
     ];
     return (
       <Dialog title="Edit event" actions={actions} modal={true} open={isOpen}>
@@ -46,7 +52,7 @@ export default class EventDialog extends Component {
             value={lengthInMinutes}
             onChange={this.handleLengthChange} >
             {Array.from({length: 12}, (value, key) => (key + 1) * 30).map(duration => {
-              return <MenuItem value={duration} primaryText={`${duration / 60} h`} />
+              return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
             })}
           </SelectField>
           <FlatButton
