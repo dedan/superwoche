@@ -40,7 +40,7 @@ export default class EventDialog extends Component {
     const style = {
       display: 'flex',
       flexDirection: 'column',
-      // alignItems: 'center',
+      padding: '0 30px',
     }
     if (!(start && end)) {
       return <div></div>
@@ -67,7 +67,7 @@ export default class EventDialog extends Component {
             floatingLabelText="Title"
             value={title}
             onChange={e => this.setState({title: e.target.value})} />
-        <div>
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <TextField
               style={{width: '45%'}}
               floatingLabelText="Start"
@@ -84,11 +84,14 @@ export default class EventDialog extends Component {
           </SelectField>
         </div>
         <TextField
+            fullWidth={true}
             hintText="Please add detailed information for this event"
             floatingLabelText="Description"
             multiLine={true}
             rows={2}
+            maxRows={4}
             value={desc}
+            underlineShow={false}
             onChange={e => this.setState({desc: e.target.value})} />
       </Dialog>
     );
