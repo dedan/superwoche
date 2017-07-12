@@ -73,6 +73,7 @@ export default class EventDialog extends Component {
             style={{width: '100%'}}
             floatingLabelText="Title"
             value={title}
+            autoFocus
             onChange={e => this.setState({title: e.target.value})} />
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <TextField

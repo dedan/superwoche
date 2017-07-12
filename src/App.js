@@ -70,6 +70,21 @@ class App extends Component {
     this.setState({selectedEventId: null})
   }
 
+  handleMoveEvent = ({event, start, end}) => {
+    const {events} = this.state
+    const updatedEvent = {
+      ...event,
+      start: start.valueOf(),
+      end: end.valueOf(),
+    }
+    const errors = validateEventChanges(updatedEvent, events, appConfig)
+    if (errors.length) {
+      alert(errors.join('\n'))
+    } else {
+      db.ref(`/events/${updatedEvent.id}`).update(updatedEvent)
+    }
+  }
+
   handleSelectSlot = slot => {
     const {events, user} = this.state
     const newEventId = db.ref('/events').push().key
@@ -110,6 +125,7 @@ class App extends Component {
           {user ?
             <MyCalendar
                 events={Object.values(events)}
+                onMoveEvent={this.handleMoveEvent}
                 onSelectEvent={this.handleSelectEvent}
                 onSelectSlot={this.handleSelectSlot} /> :
             <Teaser onLoginClick={this.handleSignupLogin} />}
