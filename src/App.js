@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase'
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import FlatButton from 'material-ui/FlatButton'
 
 import MyCalendar from './MyCalendar'
 import ExplanationDialog from './ExplanationDialog'
@@ -34,7 +35,6 @@ class App extends Component {
 
   state = {
     events: {},
-    isExplanationDialogShown: false,
     isLoading: true,
   }
 
@@ -88,15 +88,12 @@ class App extends Component {
   }
 
   render() {
-    const {events, isExplanationDialogShown, isLoading, user, selectedEventId} = this.state
+    const {events, isLoading, user, selectedEventId} = this.state
     if (isLoading) {
       return <div>loading...</div>
     }
     return (
       <div>
-        <ExplanationDialog
-            isOpen={isExplanationDialogShown}
-            onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
         <EventDialog
             isOpen={!!selectedEventId}
             events={events}
@@ -104,18 +101,85 @@ class App extends Component {
             onDeleteEventClick={this.handleDeleteEvent}
             onSaveClick={this.handleSaveEvent}
             onCloseClick={() => this.setState({selectedEventId: null})} />
-        {user ? <div>
-          <button onClick={() => firebase.auth().signOut()}>logout</button>
-          <button onClick={() => this.setState({isExplanationDialogShown: true})}>
-            Explanation
-          </button>
-          <MyCalendar
-              events={Object.values(events)}
-              onSelectEvent={this.handleSelectEvent}
-              onSelectSlot={this.handleSelectSlot} />
-        </div> : <button onClick={this.handleSignupLogin}>please log in</button>}
+        <Header
+            user={user}
+            onSignoutClick={() => firebase.auth().signOut()}
+            onLoginClick={this.handleSignupLogin} />
+        <div>
+          {user ?
+            <MyCalendar
+                events={Object.values(events)}
+                onSelectEvent={this.handleSelectEvent}
+                onSelectSlot={this.handleSelectSlot} /> :
+            <Teaser onLoginClick={this.handleSignupLogin} />}
+          </div>
       </div>
     );
+  }
+}
+
+class Header extends Component {
+
+  state = {
+    isExplanationDialogShown: false,
+  }
+
+  render() {
+    const {user, onLoginClick, onSignoutClick} = this.props
+    const {isExplanationDialogShown} = this.state
+    const style = {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 20px',
+      marginBottom: 20,
+    }
+    return (
+      <div style={style}>
+        <ExplanationDialog
+            isOpen={isExplanationDialogShown}
+            onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
+
+        <div>
+          <h1>✨ Superwoche 3000 ✨</h1>
+          <div>Help Stephan to have the most exciting week EVER</div>
+        </div>
+        <div style={{flex: 1}} />
+        <FlatButton
+            label="What is this? 🤔" primary={true}
+            onTouchTap={() => this.setState({isExplanationDialogShown: true})} />
+        <div style={{flex: 1}} />
+        {user ?
+          <FlatButton label="Logout" onTouchTap={onSignoutClick} /> :
+          <FlatButton label="Login" onTouchTap={onLoginClick} />}
+      </div>
+    )
+  }
+}
+
+
+class Teaser extends Component {
+
+  render() {
+    const {onLoginClick} = this.props
+    const style = {
+      width: '100%',
+      height: '100vw',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+    }
+    return (
+      <div style={style}>
+        <FlatButton
+            labelStyle={{color: "#FFF"}}
+            backgroundColor="#3B5998"
+            label="Login with Facebook"
+            onTouchTap={onLoginClick} />
+        <div style={{marginTop: 10, marginBottom: 30}}>... to let the magic happen</div>
+        <img src={require('./excited.gif')} />
+      </div>
+    )
   }
 }
 

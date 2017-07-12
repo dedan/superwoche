@@ -35,3 +35,6 @@ friends-cal.sublime-workspace
 
 # Build
 build
+
+# OS stuff
+.DS_Store
