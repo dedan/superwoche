@@ -6,7 +6,7 @@ import ExplanationDialog from './ExplanationDialog'
 export class Header extends Component {
 
   state = {
-    isExplanationDialogShown: false,
+    isExplanationDialogShown: true,
   }
 
   render() {
@@ -38,7 +38,7 @@ export class Header extends Component {
           </div>
           <div style={{flex: 1}} />
           <FlatButton
-              label="What is this?" primary={true}
+              label="Explanation!" primary={true}
               onTouchTap={() => this.setState({isExplanationDialogShown: true})} />
           <div style={{flex: 1}} />
           {user ?

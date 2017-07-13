@@ -6,6 +6,8 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import EventDialog from './EventDialog'
 import moment from 'moment';
 import {validateEventChanges} from './validation'
+import Avatar from 'material-ui/Avatar';
+import {teal300, teal400, pink300, pink400} from 'material-ui/styles/colors'
 
 
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -25,6 +27,31 @@ const DragAndDropCalendar = withDragAndDrop(BigCalendar);
 const formats = {
   dayFormat: (date, culture, localizer) =>
     localizer.format(date, 'dd Do MMM', culture),
+}
+
+
+class Event extends Component {
+
+  render() {
+    const {event} = this.props
+    const titleStyle = {
+      marginTop: 5,
+    }
+    const descStyle = {
+      fontWeight: 100,
+      marginTop: 8,
+    }
+    return <div>
+      <div style={titleStyle}>
+        <Avatar size={20} src={event.user.photoURL} /> {event.title}
+      </div>
+      <div style={descStyle}>{event.desc}</div>
+    </div>
+  }
+}
+
+const components = {
+  event: Event,
 }
 
 class MyCalendar extends Component {
@@ -55,6 +82,7 @@ class MyCalendar extends Component {
       start: slot.start.valueOf(),
       end: slot.end.valueOf(),
       user: user.providerData[0],
+      type: 'wake',
     }
     const errors = validateEventChanges(newEvent, events, appConfig)
     if (errors.length) {
@@ -81,6 +109,27 @@ class MyCalendar extends Component {
     }
   }
 
+  eventStyleGetter = (event, start, end, isSelected) => {
+    const colors = {
+      'wake': {
+        false: pink300,
+        true: pink400,
+      },
+      'sleep': {
+        false: teal300,
+        true: teal400,
+      }
+    }
+    var style = {
+      cursor: 'pointer',
+      padding: '2px 5px',
+      backgroundColor: colors[event.type][isSelected],
+      borderRadius: '5px',
+      border: `1px solid ${colors[event.type][true]}`,
+      color: '#fff',
+    };
+    return {style}
+  }
 
   render() {
     const {events} = this.props
@@ -104,7 +153,9 @@ class MyCalendar extends Component {
           defaultDate={new Date(2017, 7, 7)}
           onSelectEvent={event => this.handleSelectEvent(event.id)}
           onSelectSlot={this.handleSelectSlot}
-          formats={formats} />
+          formats={formats}
+          components={components}
+          eventPropGetter={this.eventStyleGetter} />
     </div>
   }
 }

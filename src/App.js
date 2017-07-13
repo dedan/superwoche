@@ -9,6 +9,7 @@ import {initializedFirebase, db, provider} from './FirebaseStore'
 import {getTotalEventMinutesByType} from './validation'
 import Sun from 'material-ui/svg-icons/image/wb-sunny';
 import Moon from 'material-ui/svg-icons/image/brightness-3';
+import {teal200, pink200} from 'material-ui/styles/colors'
 
 injectTapEventPlugin();
 
@@ -70,6 +71,7 @@ class App extends Component {
             onLoginClick={this.handleSignupLogin} />
         <div>
           {user ? <div>
+              <QuotaIndicator appConfig={appConfig} events={events} />
               <MyCalendar
                   user={user}
                   appConfig={appConfig}
@@ -78,7 +80,6 @@ class App extends Component {
                   onDeleteEventClick={this.handleDeleteEvent}
                   onSaveClick={this.handleSaveEvent}
                   onEventChange={this.handleEventChange} />
-              <QuotaIndicator appConfig={appConfig} events={events} />
             </div> :
             <Teaser onLoginClick={this.handleSignupLogin} />}
           </div>
@@ -97,23 +98,25 @@ class QuotaIndicator extends Component {
     const totalSleepDurationMinutes = getTotalEventMinutesByType(events, 'sleep')
     const totalSleepRemainingHours = (appConfig.sleepQuotaMinutes - totalSleepDurationMinutes) / 60
     return (
-      <div style={{marginTop: 15}}>
+      <div style={{margin: '15px 0'}}>
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
-            <Sun />&nbsp;
+            <Sun style={{width: 15, height: 15}} />&nbsp;
             Wake time remaining {totalWakeRemainingHours} of {appConfig.wakeQuotaMinutes / 60} hours
           </div>
           <LinearProgress
+              color={pink200}
               style={{flex: 1}}
               mode="determinate"
               value={totalWakeRemainingHours / appConfig.wakeQuotaMinutes * 60 * 100} />
         </div>
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
-            <Moon />&nbsp;
+            <Moon style={{width: 15, height: 15}} />&nbsp;
             Sleep time remaining {totalSleepRemainingHours} of {appConfig.sleepQuotaMinutes / 60} hours
           </div>
           <LinearProgress
+              color={teal200}
               style={{flex: 1}}
               mode="determinate"
               value={totalSleepRemainingHours / appConfig.sleepQuotaMinutes * 60 * 100} />
