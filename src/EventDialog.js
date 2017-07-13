@@ -21,6 +21,7 @@ export default class EventDialog extends Component {
         start: null,
         end: null,
         desc: '',
+        type: 'wake',
         ...nextProps.events[nextProps.selectedEventId],
       }
       this.setState(localEvent)

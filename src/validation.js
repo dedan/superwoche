@@ -1,4 +1,11 @@
 
+export function getTotalEventMinutesByType(events, type) {
+  return Object.values(events)
+    .filter(event => event.type === type)
+    .map(event => (event.end - event.start) / 1000 / 60)
+    .reduce((a, b) => a + b, 0)
+}
+
 export function validateEventChanges(eventChanges, events, config) {
   const errors = []
   const nonChangingEvents = Object.values(events).filter(event => event.id !== eventChanges.id)
@@ -26,17 +33,11 @@ export function validateEventChanges(eventChanges, events, config) {
     ...events,
     [eventChanges.id]: eventChanges,
   }
-  const totalWakeDuration = Object.values(newState)
-    .filter(event => event.type === 'wake')
-    .map(event => (event.end - event.start) / 1000 / 60)
-    .reduce((a, b) => a + b, 0)
+  const totalWakeDuration = getTotalEventMinutesByType(newState, 'wake')
   if (config.wakeQuotaMinutes && totalWakeDuration > config.wakeQuotaMinutes) {
     errors.push('Wake quota exceeded')
   }
-  const totalSleepDuration = Object.values(newState)
-    .filter(event => event.type === 'sleep')
-    .map(event => (event.end - event.start) / 1000 / 60)
-    .reduce((a, b) => a + b, 0)
+  const totalSleepDuration = getTotalEventMinutesByType(newState, 'sleep')
   if (config.sleepQuotaMinutes && totalSleepDuration > config.sleepQuotaMinutes) {
     errors.push('Sleep quota exceeded')
   }
