@@ -16,26 +16,36 @@ export class Header extends Component {
       display: 'flex',
       alignItems: 'center',
       padding: '0 20px',
-      marginBottom: 20,
+    }
+    const subtitleStyle = {
+      textAlign: 'center',
+      color: '#999',
+      marginBottom: 15,
     }
     return (
-      <div style={style}>
-        <ExplanationDialog
-            isOpen={isExplanationDialogShown}
-            onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
+      <div>
+        <div style={style}>
+          <ExplanationDialog
+              isOpen={isExplanationDialogShown}
+              onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
 
-        <div>
-          <h1>✨ Superwoche 3000 ✨</h1>
-          <div>Help Stephan to have the most exciting week EVER</div>
+          <div>
+            <h1 style={{margin: '0.4em 0'}}>
+              <span role="img" aria-label="sparkle">✨ </span>
+              Superwoche 3000
+              <span role="img" aria-label="sparkle"> ✨</span>
+            </h1>
+          </div>
+          <div style={{flex: 1}} />
+          <FlatButton
+              label="What is this?" primary={true}
+              onTouchTap={() => this.setState({isExplanationDialogShown: true})} />
+          <div style={{flex: 1}} />
+          {user ?
+            <FlatButton label="Logout" onTouchTap={onSignoutClick} /> :
+            <FlatButton label="Login" onTouchTap={onLoginClick} />}
         </div>
-        <div style={{flex: 1}} />
-        <FlatButton
-            label="What is this? 🤔" primary={true}
-            onTouchTap={() => this.setState({isExplanationDialogShown: true})} />
-        <div style={{flex: 1}} />
-        {user ?
-          <FlatButton label="Logout" onTouchTap={onSignoutClick} /> :
-          <FlatButton label="Login" onTouchTap={onLoginClick} />}
+        <div style={subtitleStyle}>Help Stephan to have the most exciting week EVER</div>
       </div>
     )
   }
