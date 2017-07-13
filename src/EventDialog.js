@@ -6,6 +6,9 @@ import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import moment from 'moment'
 import Avatar from 'material-ui/Avatar';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Sun from 'material-ui/svg-icons/image/wb-sunny';
+import Moon from 'material-ui/svg-icons/image/brightness-3';
 
 export default class EventDialog extends Component {
 
@@ -36,7 +39,7 @@ export default class EventDialog extends Component {
 
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
-    const {desc, title, start, end, user} = this.state
+    const {desc, title, start, end, user, type} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -70,19 +73,19 @@ export default class EventDialog extends Component {
           open={isOpen}
           autoScrollBodyContent={true}>
         <TextField
-            style={{width: '100%'}}
+            fullWidth={true}
             floatingLabelText="Title"
             value={title}
             autoFocus
             onChange={e => this.setState({title: e.target.value})} />
-        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <TextField
-              style={{width: '45%'}}
+              style={{width: '30%'}}
               floatingLabelText="Start"
               disabled={true}
               value={moment(start).format('dddd hh:mm a')} />
           <SelectField
-              style={{width: '45%'}}
+              style={{width: '30%'}}
               floatingLabelText="Duration"
               value={lengthInMinutes}
               onChange={this.handleLengthChange} >
@@ -90,13 +93,30 @@ export default class EventDialog extends Component {
               return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
             })}
           </SelectField>
+          <RadioButtonGroup
+              name="activityType" defaultSelected="wake"
+              valueSelected={type}
+              onChange={(event, value) => this.setState({type: value})} >
+            <RadioButton
+              value="wake"
+              label="Activity"
+              checkedIcon={<Sun style={{color: '#F44336'}} />}
+              uncheckedIcon={<Sun />}
+              style={{marginBottom: 8, marginRight: 15}} />
+            <RadioButton
+              value="sleep"
+              label="Sleep"
+              checkedIcon={<Moon style={{color: '#F44336'}} />}
+              uncheckedIcon={<Moon />}
+              style={{marginRight: 15}} />
+          </RadioButtonGroup>
         </div>
         <TextField
             fullWidth={true}
             hintText="Please add detailed information for this event"
             floatingLabelText="Description"
             multiLine={true}
-            rows={2}
+            rows={3}
             rowsMax={4}
             value={desc}
             underlineShow={false}
