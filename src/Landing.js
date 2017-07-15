@@ -27,7 +27,7 @@ export class Header extends Component {
       <div>
         <div style={style}>
           <ExplanationDialog
-              isOpen={false && isExplanationDialogShown && !!user}
+              isOpen={isExplanationDialogShown && !!user}
               onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
 
           <div>
@@ -59,11 +59,10 @@ export class Teaser extends Component {
     const {onLoginClick} = this.props
     const style = {
       width: '100%',
-      height: '100vw',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
       flexDirection: 'column',
+      paddingTop: 80,
     }
     return (
       <div style={style}>
