@@ -32,10 +32,12 @@ class App extends Component {
     super(props)
     initializedFirebase.auth().onAuthStateChanged(user => {
       this.setState({isLoading: false, user})
+      if (user) {
+        db.ref('/events').on('value', snapshot => {
+          this.setState({events: snapshot.val()  || {}})
+        })
+      }
     });
-    db.ref('/events').on('value', snapshot => {
-      this.setState({events: snapshot.val()  || {}})
-    })
   }
 
   handleSignupLogin = () => {
@@ -102,7 +104,7 @@ class QuotaIndicator extends Component {
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
             <Sun style={{width: 15, height: 15}} />&nbsp;
-            Wake time remaining {totalWakeRemainingHours} of {appConfig.wakeQuotaMinutes / 60} hours
+            Wake time remaining: {totalWakeRemainingHours} of {appConfig.wakeQuotaMinutes / 60} hours
           </div>
           <LinearProgress
               color={pink200}
@@ -113,7 +115,7 @@ class QuotaIndicator extends Component {
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
             <Moon style={{width: 15, height: 15}} />&nbsp;
-            Sleep time remaining {totalSleepRemainingHours} of {appConfig.sleepQuotaMinutes / 60} hours
+            Sleep time remaining: {totalSleepRemainingHours} of {appConfig.sleepQuotaMinutes / 60} hours
           </div>
           <LinearProgress
               color={teal200}
