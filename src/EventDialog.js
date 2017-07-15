@@ -9,6 +9,7 @@ import Avatar from 'material-ui/Avatar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Sun from 'material-ui/svg-icons/image/wb-sunny';
 import Moon from 'material-ui/svg-icons/image/brightness-3';
+import Delete from 'material-ui/svg-icons/action/delete'
 
 export default class EventDialog extends Component {
 
@@ -45,8 +46,15 @@ export default class EventDialog extends Component {
     onSaveClick && onSaveClick(selectedEventId, {title, desc, durationMinutes, type})
   }
 
+  handleDeleteEventClick = eventId => {
+    const {onDeleteEventClick} = this.props
+    if (window.confirm('Do you really really want to delete this event?')) {
+      onDeleteEventClick(eventId)
+    }
+  }
+
   render() {
-    const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
+    const {isOpen, onCloseClick, selectedEventId} = this.props
     const {desc, title, start, durationMinutes, user, type, titleErrorMessage} = this.state
     const style = {
       display: 'flex',
@@ -59,7 +67,8 @@ export default class EventDialog extends Component {
     const actions = <div style={{display: 'flex'}}>
       <FlatButton
           label="Delete"
-          onTouchTap={() => onDeleteEventClick(selectedEventId)} />
+          icon={<Delete />}
+          onTouchTap={() => this.handleDeleteEventClick(selectedEventId)} />
       <div style={{flex: 1}} />
       <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />
       <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
