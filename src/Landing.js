@@ -26,7 +26,7 @@ export class Header extends Component {
       <div>
         <div style={style}>
           <ExplanationDialog
-              isOpen={isExplanationDialogShown}
+              isOpen={isExplanationDialogShown && !!user}
               onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
 
           <div>
@@ -37,9 +37,9 @@ export class Header extends Component {
             </h1>
           </div>
           <div style={{flex: 1}} />
-          <FlatButton
+          {user ? <FlatButton
               label="Explanation!" primary={true}
-              onTouchTap={() => this.setState({isExplanationDialogShown: true})} />
+              onTouchTap={() => this.setState({isExplanationDialogShown: true})} /> : null}
           <div style={{flex: 1}} />
           {user ?
             <FlatButton label="Logout" onTouchTap={onSignoutClick} /> :
