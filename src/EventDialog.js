@@ -33,12 +33,21 @@ export default class EventDialog extends Component {
 
   handleSaveClick = () => {
     const {onSaveClick, selectedEventId} = this.props
-    onSaveClick && onSaveClick(selectedEventId, this.state)
+    const {title, desc, durationMinutes, type} = this.state
+    if (!title.length) {
+      this.setState({titleErrorMessage: 'Title canot be empty'})
+      return
+    }
+    if (title.length > 50) {
+      this.setState({titleErrorMessage: 'Maximum length is 50 characters'})
+      return
+    }
+    onSaveClick && onSaveClick(selectedEventId, {title, desc, durationMinutes, type})
   }
 
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
-    const {desc, title, start, durationMinutes, user, type} = this.state
+    const {desc, title, start, durationMinutes, user, type, titleErrorMessage} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
@@ -75,6 +84,7 @@ export default class EventDialog extends Component {
             floatingLabelText="Title"
             value={title}
             autoFocus
+            errorText={titleErrorMessage}
             onChange={e => this.setState({title: e.target.value})} />
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <TextField
@@ -87,7 +97,7 @@ export default class EventDialog extends Component {
               floatingLabelText="Duration"
               value={durationMinutes}
               onChange={this.handleLengthChange} >
-            {Array.from({length: 12}, (value, key) => (key + 1) * 30).map(duration => {
+            {Array.from({length: 9}, (value, key) => (key + 1) * 60).map(duration => {
               return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
             })}
           </SelectField>
