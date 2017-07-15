@@ -95,14 +95,9 @@ export default class EventDialog extends Component {
             autoFocus
             errorText={titleErrorMessage}
             onChange={e => this.setState({title: e.target.value})} />
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <TextField
-              style={{width: '30%'}}
-              floatingLabelText="Start"
-              disabled={true}
-              value={moment(start).format('dddd hh:mm a')} />
+        <div style={{display: 'flex', alignItems: 'center'}}>
           <SelectField
-              style={{width: '30%'}}
+              style={{width: '45%'}}
               floatingLabelText="Duration"
               value={durationMinutes}
               onChange={this.handleLengthChange} >
@@ -113,16 +108,17 @@ export default class EventDialog extends Component {
           <RadioButtonGroup
               name="activityType" defaultSelected="wake"
               valueSelected={type}
+              style={{paddingLeft: 50, width: '45%'}}
               onChange={(event, value) => this.setState({type: value})} >
             <RadioButton
               value="wake"
-              label="Activity"
+              label="Activity Event"
               checkedIcon={<Sun style={{color: '#F44336'}} />}
               uncheckedIcon={<Sun />}
               style={{marginBottom: 8, marginRight: 15}} />
             <RadioButton
               value="sleep"
-              label="Sleep"
+              label="Sleepy Time"
               checkedIcon={<Moon style={{color: '#F44336'}} />}
               uncheckedIcon={<Moon />}
               style={{marginRight: 15}} />
