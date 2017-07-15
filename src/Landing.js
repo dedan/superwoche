@@ -18,15 +18,16 @@ export class Header extends Component {
       padding: '0 20px',
     }
     const subtitleStyle = {
-      textAlign: 'center',
-      color: '#999',
-      marginBottom: 15,
+      color: '#888',
+      fontWeight: 200,
+      marginBottom: 20,
+      marginLeft: 20,
     }
     return (
       <div>
         <div style={style}>
           <ExplanationDialog
-              isOpen={isExplanationDialogShown && !!user}
+              isOpen={false && isExplanationDialogShown && !!user}
               onCloseClick={() => this.setState({isExplanationDialogShown: false})} />
 
           <div>
