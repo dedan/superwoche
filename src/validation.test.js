@@ -69,3 +69,12 @@ it('should include the event changes into quota calculations', () => {
     getDummyEvent(1, -100, 2), events, {wakeQuotaMinutes: 3})
   expect(res).toHaveLength(1)
 })
+
+it('should limit the length of wake events to 6 hours', () => {
+  let res = validateEventChanges({durationMinutes: 30}, [], {})
+  expect(res).toHaveLength(0)
+  res = validateEventChanges({durationMinutes: 6 * 60 + 1}, [], {})
+  expect(res).toHaveLength(0)
+  res = validateEventChanges({type: 'wake', durationMinutes: 6 * 60 + 1}, [], {})
+  expect(res).toHaveLength(1)
+})

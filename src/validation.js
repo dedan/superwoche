@@ -44,5 +44,10 @@ export function validateEventChanges(eventChanges, events, config) {
     errors.push('Sleep quota exceeded')
   }
 
+  if (eventChanges.type === 'wake' && eventChanges.durationMinutes > (6 * 60)) {
+    errors.push('Activity events have a maximum length of 6 hours')
+    errors.push('Please make it shorter or a sleep event')
+  }
+
   return errors
 }

@@ -70,8 +70,14 @@ class MyCalendar extends Component {
   }
 
   handleSaveClick = (eventId, newEventData) => {
-    this.props.onSaveClick(eventId, newEventData)
-    this.setState({selectedEventId: null})
+    const {appConfig, events} = this.props
+    const errors = validateEventChanges(newEventData, events, appConfig)
+    if (errors.length) {
+      alert(errors.join('\n'))
+    } else {
+      this.props.onSaveClick(eventId, newEventData)
+      this.setState({selectedEventId: null})
+    }
   }
 
   handleSelectSlot = slot => {
@@ -82,7 +88,6 @@ class MyCalendar extends Component {
       start: slot.start.valueOf(),
       durationMinutes: moment(slot.end).diff(slot.start, 'minutes'),
       user: user.providerData[0],
-      type: 'wake',
     }
     const errors = validateEventChanges(newEvent, events, appConfig)
     if (errors.length) {
@@ -122,9 +127,9 @@ class MyCalendar extends Component {
     var style = {
       cursor: 'pointer',
       padding: '2px 5px',
-      backgroundColor: colors[event.type][isSelected],
+      backgroundColor: event.type ? colors[event.type][isSelected] : '#aaa',
       borderRadius: '5px',
-      border: `1px solid ${colors[event.type][true]}`,
+      border: `1px solid ${colors[event.type || 'wake'][true]}`,
       color: '#fff',
     };
     return {style}
