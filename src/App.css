@@ -11,3 +11,7 @@ a:link, a:visited, a:active {
 a:hover {
     color: #000;
 }
+
+.rbc-time-header .rbc-row:nth-child(2) {
+    display: none;
+}
