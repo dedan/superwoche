@@ -15,3 +15,8 @@ a:hover {
 .rbc-time-header .rbc-row:nth-child(2) {
     display: none;
 }
+
+.rbc-time-slot:hover::before {
+    color: #999;
+    content: 'Click and drag for new event';
+}
