@@ -2,16 +2,17 @@
 export function getTotalEventMinutesByType(events, type) {
   return Object.values(events)
     .filter(event => event.type === type)
-    .map(event => (event.end - event.start) / 1000 / 60)
+    .map(event => event.durationMinutes)
     .reduce((a, b) => a + b, 0)
 }
 
 export function validateEventChanges(eventChanges, events, config) {
   const errors = []
   const nonChangingEvents = Object.values(events).filter(event => event.id !== eventChanges.id)
+  const eventChangesEnd = eventChanges.start + eventChanges.durationMinutes * 60 * 1000
 
   const tooCloselyFollowingEvents = nonChangingEvents.filter(event => {
-    const distanceInMinutes = (event.start - eventChanges.end) / 1000 / 60
+    const distanceInMinutes = (event.start - eventChangesEnd) / 1000 / 60
     const isTooclose = distanceInMinutes < config.breakMinutes && distanceInMinutes >= 0
     return eventChanges.id !== event.id && isTooclose
   })
@@ -21,7 +22,8 @@ export function validateEventChanges(eventChanges, events, config) {
   }
 
   const tooCloselyBeforeEvents = nonChangingEvents.filter(event => {
-    const distanceInMinutes = (eventChanges.start - event.end) / 1000 / 60
+    const eventEnd = event.start + event.durationMinutes * 60 * 1000
+    const distanceInMinutes = (eventChanges.start - eventEnd) / 1000 / 60
     const isTooclose = distanceInMinutes < config.breakMinutes && distanceInMinutes >= 0
     return eventChanges.id !== event.id && isTooclose
   })

@@ -19,7 +19,6 @@ export default class EventDialog extends Component {
       const localEvent = {
         title: '',
         start: null,
-        end: null,
         desc: '',
         type: 'wake',
         ...nextProps.events[nextProps.selectedEventId],
@@ -29,8 +28,7 @@ export default class EventDialog extends Component {
   }
 
   handleLengthChange = (event, index, value) => {
-    const {start} = this.state
-    this.setState({end: start + value * 60 * 1000})
+    this.setState({durationMinutes: value})
   }
 
   handleSaveClick = () => {
@@ -40,16 +38,15 @@ export default class EventDialog extends Component {
 
   render() {
     const {isOpen, onCloseClick, onDeleteEventClick, selectedEventId} = this.props
-    const {desc, title, start, end, user, type} = this.state
+    const {desc, title, start, durationMinutes, user, type} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
       padding: '0 30px',
     }
-    if (!(start && end)) {
+    if (!start) {
       return <div></div>
     }
-    const lengthInMinutes = (end - start) / (60 * 1000)
     const actions = <div style={{display: 'flex'}}>
       <FlatButton
           label="Delete"
@@ -88,7 +85,7 @@ export default class EventDialog extends Component {
           <SelectField
               style={{width: '30%'}}
               floatingLabelText="Duration"
-              value={lengthInMinutes}
+              value={durationMinutes}
               onChange={this.handleLengthChange} >
             {Array.from({length: 12}, (value, key) => (key + 1) * 30).map(duration => {
               return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />

@@ -80,7 +80,7 @@ class MyCalendar extends Component {
     const newEvent = {
       id: newEventId,
       start: slot.start.valueOf(),
-      end: slot.end.valueOf(),
+      durationMinutes: moment(slot.end).diff(slot.start, 'minutes'),
       user: user.providerData[0],
       type: 'wake',
     }
@@ -97,9 +97,8 @@ class MyCalendar extends Component {
   handleMoveEvent = ({event, start, end}) => {
     const {appConfig, events} = this.props
     const updatedEvent = {
-      ...event,
+      ...events[event.id],
       start: start.valueOf(),
-      end: end.valueOf(),
     }
     const errors = validateEventChanges(updatedEvent, events, appConfig)
     if (errors.length) {
@@ -133,6 +132,31 @@ class MyCalendar extends Component {
 
   render() {
     const {events} = this.props
+    const eventsToRender = []
+    Object.values(events).forEach(event => {
+      const start = new Date(event.start)
+      const end = new Date(event.start + event.durationMinutes * 60 * 1000)
+      if (start.getDay() === end.getDay()) {
+        eventsToRender.push(event)
+        return
+      }
+      const firstDayDuration = (moment(event.start).endOf('day').valueOf() - event.start) / 60 / 1000
+      const firstEvent = {
+        ...event,
+        durationMinutes: firstDayDuration,
+        isDaySpanning: true,
+        isFirstDay: true,
+      }
+      eventsToRender.push(firstEvent)
+      const secondEvent = {
+        ...event,
+        start: moment(end).startOf('day').valueOf(),
+        durationMinutes: event.durationMinutes - firstDayDuration,
+        isDaySpanning: true,
+        isFirstDay: false,
+      }
+      eventsToRender.push(secondEvent)
+    })
     const {selectedEventId} = this.state
     return <div>
       <EventDialog
@@ -145,11 +169,11 @@ class MyCalendar extends Component {
       <DragAndDropCalendar
           selectable
           toolbar={false}
-          events={Object.values(events)}
+          events={eventsToRender}
           defaultView='week'
           onEventDrop={this.handleMoveEvent}
           startAccessor={event => new Date(event.start)}
-          endAccessor={event => new Date(event.end)}
+          endAccessor={event => new Date(event.start + event.durationMinutes * 60 * 1000)}
           defaultDate={new Date(2017, 7, 7)}
           onSelectEvent={event => this.handleSelectEvent(event.id)}
           onSelectSlot={this.handleSelectSlot}

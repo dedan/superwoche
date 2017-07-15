@@ -1,9 +1,8 @@
 import {validateEventChanges} from './validation'
 
-function getDummyEvent(id, startInMinutesFromNow, durationInMinutes, type='wake') {
+function getDummyEvent(id, startInMinutesFromNow, durationMinutes, type='wake') {
   const start = new Date().valueOf() + startInMinutesFromNow * 60 * 1000
-  const end = start + durationInMinutes * 60 * 1000
-  return {id, start, end, type}
+  return {id, start, durationMinutes, type}
 }
 
 
