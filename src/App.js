@@ -9,7 +9,7 @@ import {initializedFirebase, db, provider} from './FirebaseStore'
 import {getTotalEventMinutesByType} from './validation'
 import Sun from 'material-ui/svg-icons/image/wb-sunny';
 import Moon from 'material-ui/svg-icons/image/brightness-3';
-import {teal200, pink200} from 'material-ui/styles/colors'
+import {teal300, pink300} from 'material-ui/styles/colors'
 
 injectTapEventPlugin();
 
@@ -103,22 +103,22 @@ class QuotaIndicator extends Component {
       <div style={{margin: '15px 0'}}>
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
-            <Sun style={{width: 15, height: 15}} />&nbsp;
+            <Sun color={pink300} style={{width: 15, height: 15}} />&nbsp;
             Wake time remaining: {totalWakeRemainingHours} of {appConfig.wakeQuotaMinutes / 60} hours
           </div>
           <LinearProgress
-              color={pink200}
+              color={pink300}
               style={{flex: 1}}
               mode="determinate"
               value={totalWakeRemainingHours / appConfig.wakeQuotaMinutes * 60 * 100} />
         </div>
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{display: 'flex', alignItems: 'center', flex: 1}}>
-            <Moon style={{width: 15, height: 15}} />&nbsp;
+            <Moon color={teal300} style={{width: 15, height: 15}} />&nbsp;
             Sleep time remaining: {totalSleepRemainingHours} of {appConfig.sleepQuotaMinutes / 60} hours
           </div>
           <LinearProgress
-              color={teal200}
+              color={teal300}
               style={{flex: 1}}
               mode="determinate"
               value={totalSleepRemainingHours / appConfig.sleepQuotaMinutes * 60 * 100} />
