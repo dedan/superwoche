@@ -9,6 +9,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Sun from 'material-ui/svg-icons/image/wb-sunny';
 import Moon from 'material-ui/svg-icons/image/brightness-3';
 import Delete from 'material-ui/svg-icons/action/delete'
+import MailIcon from 'material-ui/svg-icons/communication/mail-outline'
 
 export default class EventDialog extends Component {
 
@@ -85,7 +86,7 @@ export default class EventDialog extends Component {
     const titleComp = <div style={{display: 'flex', alignItems: 'center'}}>
       <Avatar src={user.photoURL} />&nbsp;
       Event by&nbsp;<a href={`http://facebook.com/${user.uid}`} target="_blank">
-        {user.displayName}
+        {user.displayName}&nbsp;<MailIcon color="#F06292" />
       </a>
     </div>
 
