@@ -19,4 +19,5 @@ a:hover {
 .rbc-time-slot:hover::before {
     color: #999;
     content: 'Click and drag for new event';
+    font-weight: 300;
 }

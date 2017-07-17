@@ -21,6 +21,8 @@ export default class EventDialog extends Component {
         start: null,
         desc: '',
         type: 'wake',
+        titleErrorMessage: '',
+        descErrorMessage: '',
         ...nextProps.events[nextProps.selectedEventId],
       }
       this.setState(localEvent)
@@ -48,6 +50,7 @@ export default class EventDialog extends Component {
       })
       return
     }
+    this.setState({titleErrorMessage: '', descErrorMessage: ''})
     onSaveClick && onSaveClick(selectedEventId, {title, desc, durationMinutes, type})
   }
 
