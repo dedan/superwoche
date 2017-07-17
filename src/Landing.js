@@ -6,7 +6,7 @@ import ExplanationDialog from './ExplanationDialog'
 export class Header extends Component {
 
   state = {
-    isExplanationDialogShown: true,
+    isExplanationDialogShown: false,
   }
 
   render() {

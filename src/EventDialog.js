@@ -4,7 +4,6 @@ import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import moment from 'moment'
 import Avatar from 'material-ui/Avatar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Sun from 'material-ui/svg-icons/image/wb-sunny';

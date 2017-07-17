@@ -3,6 +3,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import './App.css'
+import OnboardingDialog from './OnboardingDialog'
 import MyCalendar from './MyCalendar'
 import {Header, Teaser} from './Landing'
 import {initializedFirebase, db, provider} from './FirebaseStore'
@@ -36,6 +37,9 @@ class App extends Component {
         db.ref('/events').on('value', snapshot => {
           this.setState({events: snapshot.val()  || {}})
         })
+        db.ref(`/userProfiles/${user.uid}`).on('value', snapshot => {
+          this.setState({userProfile: snapshot.val() || {}})
+        })
       }
     });
   }
@@ -60,8 +64,13 @@ class App extends Component {
     db.ref(`/events/${newEventId}`).update(newEvent)
   }
 
+  handleCloseOnboarding = () => {
+    const {user} = this.state
+    db.ref(`/userProfiles/${user.uid}`).update({hasFinishedOnboarding: true})
+  }
+
   render() {
-    const {events, isLoading, user} = this.state
+    const {events, isLoading, user, userProfile} = this.state
     if (isLoading) {
       return <div>loading...</div>
     }
@@ -73,6 +82,10 @@ class App extends Component {
             onLoginClick={this.handleSignupLogin} />
         <div>
           {user ? <div>
+              <OnboardingDialog
+                  user={user}
+                  onCloseClick={this.handleCloseOnboarding}
+                  isOpen={!!userProfile && !userProfile.hasFinishedOnboarding} />
               <QuotaIndicator appConfig={appConfig} events={events} />
               <MyCalendar
                   user={user}
