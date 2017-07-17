@@ -176,8 +176,6 @@ class MyCalendar extends Component {
           toolbar={false}
           events={eventsToRender}
           defaultView='week'
-          timeslots={1}
-          step={60}
           onEventDrop={this.handleMoveEvent}
           startAccessor={event => new Date(event.start)}
           endAccessor={event => new Date(event.start + event.durationMinutes * 60 * 1000)}

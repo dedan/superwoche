@@ -80,7 +80,7 @@ export default class EventDialog extends Component {
           icon={<Delete />}
           onTouchTap={() => this.handleDeleteEventClick(selectedEventId)} />
       <div style={{flex: 1}} />
-      <FlatButton disabled={!title || !desc} label="Close" primary={false} onTouchTap={onCloseClick} />
+      <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />
       <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
     </div>
     const titleComp = <div style={{display: 'flex', alignItems: 'center'}}>
