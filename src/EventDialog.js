@@ -42,6 +42,12 @@ export default class EventDialog extends Component {
       this.setState({titleErrorMessage: 'Maximum length is 50 characters'})
       return
     }
+    if (desc.length < 50) {
+      this.setState({
+        descErrorMessage: 'Please enter a detailed description of the event (min 50 characters)'
+      })
+      return
+    }
     onSaveClick && onSaveClick(selectedEventId, {title, desc, durationMinutes, type})
   }
 
@@ -54,11 +60,12 @@ export default class EventDialog extends Component {
 
   render() {
     const {isOpen, onCloseClick, selectedEventId} = this.props
-    const {desc, title, start, durationMinutes, user, type, titleErrorMessage} = this.state
+    const {desc, title, start, durationMinutes, user, type, titleErrorMessage, descErrorMessage} = this.state
     const style = {
       display: 'flex',
       flexDirection: 'column',
       padding: '0 30px',
+      minHeight: 300,
     }
     if (!start) {
       return <div></div>
@@ -69,7 +76,7 @@ export default class EventDialog extends Component {
           icon={<Delete />}
           onTouchTap={() => this.handleDeleteEventClick(selectedEventId)} />
       <div style={{flex: 1}} />
-      <FlatButton label="Close" primary={false} onTouchTap={onCloseClick} />
+      <FlatButton disabled={!title || !desc} label="Close" primary={false} onTouchTap={onCloseClick} />
       <FlatButton label="Save" primary={true} onTouchTap={this.handleSaveClick} />
     </div>
     const titleComp = <div style={{display: 'flex', alignItems: 'center'}}>
@@ -100,7 +107,7 @@ export default class EventDialog extends Component {
               floatingLabelText="Duration"
               value={durationMinutes}
               onChange={this.handleLengthChange} >
-            {Array.from({length: 9}, (value, key) => (key + 1) * 60).map(duration => {
+            {Array.from({length: type === 'wake' ? 6 : 9}, (value, key) => (key + 1) * 60).map(duration => {
               return <MenuItem key={duration} value={duration} primaryText={`${duration / 60} h`} />
             })}
           </SelectField>
@@ -132,6 +139,7 @@ export default class EventDialog extends Component {
             rowsMax={4}
             value={desc}
             underlineShow={false}
+            errorText={descErrorMessage}
             onChange={e => this.setState({desc: e.target.value})} />
       </Dialog>
     );
